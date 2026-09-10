@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inspección de Vehículo</title>
+  <style>
+    body { font-family: system-ui, -apple-system, sans-serif; margin: 0; padding: 20px; background: #f4f6f8; color: #333; }
+    .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); max-width: 480px; margin: 0 auto; text-align: center; }
+    h2 { color: #1a365d; margin-top: 0; }
+    .guide-list { text-align: left; background: #edf2f7; padding: 15px 20px; border-radius: 8px; font-size: 0.9em; }
+    .btn { background: #25d366; color: white; border: none; padding: 14px 28px; font-size: 16px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 15px; }
+    .btn-secondary { background: #4a5568; }
+    .btn:disabled { background: #cbd5e0; cursor: not-allowed; }
+    #cameraView { width: 100%; border-radius: 8px; display: none; margin-top: 10px; }
+    #preview { width: 100%; border-radius: 8px; display: none; margin-top: 10px; }
+    .step-indicator { font-weight: bold; color: #2b6cb0; margin-bottom: 10px; }
+    canvas { display: none; }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <!-- PANTALLA INICIAL: INSTRUCCIONES -->
+  <div id="screenIntro">
+    <h2>Inspección de Vehículo</h2>
+    <p>Complete el proceso tomando las 8 fotografías requeridas. Asegúrese de estar en un lugar bien iluminado.</p>
+    
+    <div class="guide-list">
+      <strong>Fotos requeridas:</strong>
+      <ol>
+        <li>Frente completo</li>
+        <li>Lateral Izquierdo</li>
+        <li>Trastera / Trasera</li>
+        <li>Lateral Derecho</li>
+        <li>Rueda y Llanta delantera izq.</li>
+        <li>Parabrisas (detalle)</li>
+        <li>Tablero (con kilometraje)</li>
+        <li>Tarjeta Verde / Cédula</li>
+      </ol>
+    </div>
+
+    <button class="btn" onclick="startProcess()">Comenzar Inspección</button>
+  </div>
+
+  <!-- PANTALLA DE CAPTURA DE FOTOS -->
+  <div id="screenCapture" style="display:none;">
+    <div class="step-indicator" id="stepTitle">Foto 1 de 8</div>
+    <p id="stepInstruction">Tome una foto del frente completo del vehículo.</p>
+    
+    <video id="cameraView" autoplay playsinline></video>
+    <img id="preview" alt="Vista previa">
+    <canvas id="canvas"></canvas>
+
+    <button class="btn" id="btnTake" onclick="takePhoto()">Tomar Foto</button>
+    <button class="btn btn-secondary" id="btnRetake" onclick="retakePhoto()" style="display:none;">Repetir Foto</button>
+    <button class="btn" id="btnNext" onclick="nextStep()" style="display:none;">Siguiente Foto</button>
+  </div>
+
+  <!-- PANTALLA FINAL: ENVÍO -->
+  <div id="screenFinish" style="display:none;">
+    <h2>Inspección Completada</h2>
+    <p>Ha capturado las 8 fotografías correctamente.</p>
+    <button class="btn" id="btnSend" onclick="sendData()">Enviar Inspección</button>
+    <p id="statusMessage" style="margin-top: 15px; font-weight: bold;"></p>
+  </div>
+</div>
+
+<script>
+  // Reemplaza esta URL por la que copiaste de Google Apps Script
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxt__TfsdrI1NRyoAw3Ehom6kJzqc70IDdcAd7fsclKZ6wc17dHddXONtHMg4VUkDZX-A/exec";
+
+  const steps = [
+    { name: "01_Frente", text: "1. Frente completo del vehículo" },
+    { name: "02_Lateral_Izquierdo", text: "2. Lateral izquierdo completo" },
+    { name: "03_Trasera", text: "3. Parte trasera completa" },
+    { name: "04_Lateral_Derecho", text: "4. Lateral derecho completo" },
+    { name: "05_Rueda_Del_Izq", text: "5. Detalle de rueda y llanta delantera izquierda" },
+    { name: "06_Parabrisas", text: "6. Detalle del parabrisas" },
+    { name: "07_Tablero", text: "7. Tablero encendido mostrando el kilometraje" },
+    { name: "08_Cedula", text: "8. Tarjeta Verde / Cédula del vehículo" }
+  ];
+
+  let currentStep = 0;
+  let capturedPhotos = [];
+  let stream = null;
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const dominio = urlParams.get('dominio') || 'SIN_PATENTE';
+  const cliente = urlParams.get('cliente') || 'CLIENTE_GENERICO';
+
+  async function startProcess() {
+    document.getElementById('screenIntro').style.display = 'none';
+    document.getElementById('screenCapture').style.display = 'block';
+    await initCamera();
+    updateStepUI();
+  }
+
+  async function initCamera() {
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({ 
+        video: { facingMode: { exact: "environment" } },
+        audio: false 
+      });
+    } catch (e) {
+      stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+    }
+    const video = document.getElementById('cameraView');
+    video.srcObject = stream;
+    video.style.display = 'block';
+  }
+
+  function updateStepUI() {
+    document.getElementById('stepTitle').innerText = `Foto ${currentStep + 1} de ${steps.length}`;
+    document.getElementById('stepInstruction').innerText = steps[currentStep].text;
+    document.getElementById('preview').style.display = 'none';
+    document.getElementById('cameraView').style.display = 'block';
+    document.getElementById('btnTake').style.display = 'block';
+    document.getElementById('btnRetake').style.display = 'none';
+    document.getElementById('btnNext').style.display = 'none';
+  }
+
+  function takePhoto() {
+    const video = document.getElementById('cameraView');
+    const canvas = document.getElementById('canvas');
+    const preview = document.getElementById('preview');
+
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+    
+    preview.src = dataUrl;
+    preview.style.display = 'block';
+    video.style.display = 'none';
+
+    document.getElementById('btnTake').style.display = 'none';
+    document.getElementById('btnRetake').style.display = 'block';
+    document.getElementById('btnNext').style.display = 'block';
+
+    capturedPhotos[currentStep] = {
+      nombre: steps[currentStep].name,
+      base64: dataUrl
+    };
+  }
+
+  function retakePhoto() {
+    updateStepUI();
+  }
+
+  function nextStep() {
+    currentStep++;
+    if (currentStep < steps.length) {
+      updateStepUI();
+    } else {
+      stopCamera();
+      document.getElementById('screenCapture').style.display = 'none';
+      document.getElementById('screenFinish').style.display = 'block';
+    }
+  }
+
+  function stopCamera() {
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop());
+    }
+  }
+
+  async function sendData() {
+    const btnSend = document.getElementById('btnSend');
+    const status = document.getElementById('statusMessage');
+    
+    btnSend.disabled = true;
+    status.innerText = "Enviando fotografías, aguarde un momento...";
+
+    const payload = {
+      cliente: cliente,
+      dominio: dominio,
+      fotos: capturedPhotos
+    };
+
+    try {
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      status.style.color = "green";
+      status.innerText = "¡Inspección enviada con éxito! Ya puede cerrar esta pantalla.";
+      btnSend.style.display = "none";
+    } catch (error) {
+      status.style.color = "red";
+      status.innerText = "Ocurrió un error al enviar. Por favor reintente.";
+      btnSend.disabled = false;
+    }
+  }
+</script>
+
+</body>
+</html>
