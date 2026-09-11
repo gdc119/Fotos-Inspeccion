@@ -57,13 +57,6 @@
       text-align: center;
       margin-bottom: 15px;
     }
-    .info-header {
-      background: #e9ecef;
-      padding: 12px 15px;
-      border-radius: 8px;
-      margin-bottom: 20px;
-      font-size: 0.95em;
-    }
     /* Recuadro de instrucción e imagen de ejemplo */
     .photo-instruction-box {
       background-color: #ffebee;
@@ -206,11 +199,6 @@
     <div class="brand-sub">Inspección Digital de Vehículos</div>
   </div>
 
-  <div id="info-header" class="info-header">
-    <p><strong>Dominio:</strong> <span id="lbl-dominio">-</span></p>
-    <p><strong>Cliente:</strong> <span id="lbl-cliente">-</span></p>
-  </div>
-
   <!-- PORTADA DE BIENVENIDA -->
   <div id="step-welcome" class="welcome-box">
     <h2>Bienvenido/a</h2>
@@ -273,19 +261,19 @@
 <script>
   const SCRIPT_URL = "https://script.google.com/macros/s/TU_SCRIPT_ID_AQUI/exec";
 
-  // Rutas con los nombres exactos cargados en GitHub
+  // Rutas con codificación de caracteres para asegurar compatibilidad total en GitHub
   const fotosBase = [
-    { id: 'frente', nombre: 'FOTO DE FRENTE', img: 'Foto Frente.png' },
-    { id: 'atras', nombre: 'FOTO DE ATRÁS', img: 'Foto Atras.png' },
-    { id: 'lat_conductor', nombre: 'LATERAL CONDUCTOR', img: 'Lateral Conductor.png' },
-    { id: 'lat_acompanante', nombre: 'LATERAL ACOMPAÑANTE', img: 'Lateral Acompañante.png' },
+    { id: 'frente', nombre: 'FOTO DE FRENTE', img: 'Foto%20Frente.png' },
+    { id: 'atras', nombre: 'FOTO DE ATRÁS', img: 'Foto%20Atras.png' },
+    { id: 'lat_conductor', nombre: 'LATERAL CONDUCTOR', img: 'Lateral%20Conductor.png' },
+    { id: 'lat_acompanante', nombre: 'LATERAL ACOMPAÑANTE', img: 'Lateral%20Acompa%C3%B1ante.png' },
     { id: 'kilometraje', nombre: 'KILOMETRAJE / TABLERO', img: 'Kilometraje.jpg' },
-    { id: 'rueda_auxilio', nombre: 'RUEDA DE AUXILIO', img: 'Rueda Auxilio.jpg' }
+    { id: 'rueda_auxilio', nombre: 'RUEDA DE AUXILIO', img: 'Rueda%20Auxilio.jpg' }
   ];
 
   const fotosGNC = [
-    { id: 'tubo_gnc', nombre: 'TUBO DE GNC', img: 'Tubo gnc.jpg' },
-    { id: 'oblea_gnc', nombre: 'OBLEA DE GNC', img: 'Oblea Gnc.jpg' }
+    { id: 'tubo_gnc', nombre: 'TUBO DE GNC', img: 'Tubo%20gnc.jpg' },
+    { id: 'oblea_gnc', nombre: 'OBLEA DE GNC', img: 'Oblea%20Gnc.jpg' }
   ];
 
   let listaFotos = [];
@@ -297,9 +285,6 @@
   const urlParams = new URLSearchParams(window.location.search);
   const dominio = urlParams.get('dominio') || 'No especificado';
   const cliente = urlParams.get('cliente') || 'No especificado';
-
-  document.getElementById('lbl-dominio').innerText = dominio;
-  document.getElementById('lbl-cliente').innerText = cliente;
 
   function comenzarInspeccion() {
     document.getElementById('step-welcome').classList.add('hidden');
