@@ -35,6 +35,12 @@
       padding-bottom: 15px;
       border-bottom: 2px solid #e9ecef;
     }
+    .brand-logo {
+      max-width: 180px;
+      height: auto;
+      margin: 0 auto 10px auto;
+      display: block;
+    }
     .brand-logo-text {
       font-size: 1.6em;
       font-weight: 900;
@@ -58,7 +64,7 @@
       margin-bottom: 20px;
       font-size: 0.95em;
     }
-    /* Estilo del título e instrucción resaltada */
+    /* Recadro de instrucción e imagen de ejemplo */
     .photo-instruction-box {
       background-color: #ffebee;
       border-left: 5px solid #d32f2f;
@@ -82,7 +88,6 @@
       font-size: 0.85em;
       font-weight: 600;
     }
-    /* Miniatura superior derecha garantizada */
     .example-thumb {
       position: absolute;
       top: 10px;
@@ -91,8 +96,8 @@
       height: 65px;
       border: 2px solid #d32f2f;
       border-radius: 6px;
-      object-fit: contain;
-      background-color: #fff;
+      object-fit: cover;
+      background-color: #eee;
     }
     .gnc-question, .welcome-box {
       background: #f8f9fa;
@@ -145,11 +150,11 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 15px;
+      gap: 12px;
     }
     video, canvas, img.preview {
       width: 100%;
-      max-height: 350px;
+      height: 320px;
       border-radius: 8px;
       background-color: #000;
       object-fit: cover;
@@ -194,8 +199,9 @@
 <body>
 
 <div class="container">
-  <!-- ENCABEZADO SEGUROS CBA -->
+  <!-- ENCABEZADO -->
   <div class="brand-header">
+    <img src="logo.png" alt="Seguros CBA" class="brand-logo" onerror="this.style.display='none'">
     <div class="brand-logo-text">SEGUROS CBA</div>
     <div class="brand-sub">Inspección Digital de Vehículos</div>
   </div>
@@ -205,14 +211,14 @@
     <p><strong>Cliente:</strong> <span id="lbl-cliente">-</span></p>
   </div>
 
-  <!-- PASO 1: Bienvenida -->
+  <!-- PORTADA DE BIENVENIDA -->
   <div id="step-welcome" class="welcome-box">
     <h2>Bienvenido/a</h2>
-    <p>A continuación realizaremos la toma de fotografías de la unidad para el registro de inspección.</p>
+    <p>A continuación realizaremos la toma de fotografías de la unidad para el registro de la inspección.</p>
     <button onclick="comenzarInspeccion()">Iniciar Inspección 🚗</button>
   </div>
 
-  <!-- PASO 2: Pregunta GNC -->
+  <!-- PREGUNTA GNC -->
   <div id="step-gnc" class="gnc-question hidden">
     <p>¿El vehículo cuenta con equipo de GNC?</p>
     <div class="btn-group">
@@ -221,39 +227,40 @@
     </div>
   </div>
 
-  <!-- PASO 3: Toma de Fotografías -->
+  <!-- TOMA DE FOTOS -->
   <div id="step-camera" class="camera-container hidden">
     <div class="photo-instruction-box">
       <h3 id="photo-title">⚠️ FOTO REQUERIDA</h3>
-      <p>Encuadre la toma según el esquema de guía</p>
+      <p>Asegúrese de encuadrar según la imagen de referencia</p>
       <img id="photo-example" class="example-thumb" src="" alt="Ejemplo">
     </div>
 
-    <video id="video" autoplay playsinline></video>
+    <video id="video" autoplay playsinline muted></video>
     <canvas id="canvas" class="hidden"></canvas>
     <img id="preview-img" class="preview hidden" alt="Vista previa">
 
     <div id="camera-controls" style="width: 100%;">
       <button id="btn-capture" onclick="capturarFoto()">📷 Tomar Foto</button>
+      <button id="btn-reload-cam" class="btn-secondary hidden" style="margin-top: 8px;" onclick="iniciarCamara()">🔄 Activar Cámara</button>
       <div id="retake-controls" class="btn-group hidden">
-        <button class="btn-secondary" onclick="repetirFoto()">Reintentar</button>
+        <button class="btn-secondary" onclick="repetirFoto()">🔄 Volver a tomar</button>
         <button onclick="confirmarFoto()">Siguiente ➡️</button>
       </div>
     </div>
   </div>
 
-  <!-- PASO 4: Enviar Inspección -->
+  <!-- ENVIAR INSPECCIÓN -->
   <div id="step-send" class="hidden" style="text-align: center;">
-    <h2 style="color: #28a745; margin-bottom: 10px;">¡Fotografías completadas!</h2>
-    <p style="margin-bottom: 20px; color: #666;">Haz clic en el botón para enviar los datos.</p>
+    <h2 style="color: #28a745; margin-bottom: 10px;">¡Fotos completadas!</h2>
+    <p style="margin-bottom: 20px; color: #666;">Haz clic en el botón para enviar la inspección.</p>
     <button id="btn-submit" class="btn-success" onclick="enviarInspeccion()">📤 Enviar Inspección</button>
     <div id="loading" class="hidden">
       <div class="spinner"></div>
-      <p>Enviando fotografías, por favor espere...</p>
+      <p>Enviando información, por favor espere...</p>
     </div>
   </div>
 
-  <!-- PASO 5: Pantalla de Agradecimiento -->
+  <!-- PANTALLA FINAL -->
   <div id="step-thanks" class="success-screen hidden">
     <svg viewBox="0 0 24 24">
       <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
@@ -266,28 +273,19 @@
 <script>
   const SCRIPT_URL = "https://script.google.com/macros/s/TU_SCRIPT_ID_AQUI/exec";
 
-  // Esquemas SVG incrustados para garantizar la carga correcta
-  const imgFrente = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 80'><rect width='100' height='80' fill='%23edf2f7'/><path d='M20,25 L80,25 L90,45 L90,65 L10,65 L10,45 Z' stroke='%230066cc' stroke-width='3' fill='%23bcccdc'/><circle cx='22' cy='52' r='6' fill='%23f0b429'/><circle cx='78' cy='52' r='6' fill='%23f0b429'/><rect x='35' y='52' width='30' height='8' fill='%23333'/><text x='50' y='18' font-size='9' text-anchor='middle' font-weight='bold' fill='%230066cc'>FRENTE</text></svg>";
-  const imgAtras = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 80'><rect width='100' height='80' fill='%23edf2f7'/><path d='M20,25 L80,25 L90,45 L90,65 L10,65 L10,45 Z' stroke='%230066cc' stroke-width='3' fill='%23bcccdc'/><circle cx='22' cy='52' r='6' fill='%23e53e3e'/><circle cx='78' cy='52' r='6' fill='%23e53e3e'/><rect x='35' y='52' width='30' height='8' fill='%23333'/><text x='50' y='18' font-size='9' text-anchor='middle' font-weight='bold' fill='%230066cc'>ATRÁS</text></svg>";
-  const imgLatCond = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 80'><rect width='100' height='80' fill='%23edf2f7'/><path d='M10,45 L25,25 L65,25 L85,40 L90,48 L90,58 L10,58 Z' fill='%23bcccdc' stroke='%230066cc' stroke-width='3'/><circle cx='28' cy='58' r='10' fill='%23333'/><circle cx='72' cy='58' r='10' fill='%23333'/><text x='50' y='18' font-size='8' text-anchor='middle' font-weight='bold' fill='%230066cc'>LAT. CONDUCTOR</text></svg>";
-  const imgLatAcomp = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 80'><rect width='100' height='80' fill='%23edf2f7'/><path d='M90,45 L75,25 L35,25 L15,40 L10,48 L10,58 L90,58 Z' fill='%23bcccdc' stroke='%230066cc' stroke-width='3'/><circle cx='28' cy='58' r='10' fill='%23333'/><circle cx='72' cy='58' r='10' fill='%23333'/><text x='50' y='18' font-size='7.5' text-anchor='middle' font-weight='bold' fill='%230066cc'>LAT. ACOMPAÑANTE</text></svg>";
-  const imgKms = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 80'><rect width='100' height='80' fill='%231a202c'/><circle cx='50' cy='45' r='25' stroke='%23cbd5e0' stroke-width='3' fill='none'/><path d='M50,45 L65,30' stroke='%23e53e3e' stroke-width='3'/><text x='50' y='18' font-size='8' text-anchor='middle' font-weight='bold' fill='%23ffffff'>KILOMETRAJE</text></svg>";
-  const imgAuxilio = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 80'><rect width='100' height='80' fill='%23edf2f7'/><circle cx='50' cy='45' r='24' fill='%23333'/><circle cx='50' cy='45' r='14' fill='%23cbd5e0'/><text x='50' y='18' font-size='8' text-anchor='middle' font-weight='bold' fill='%230066cc'>AUXILIO</text></svg>";
-  const imgTuboGNC = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 80'><rect width='100' height='80' fill='%23edf2f7'/><rect x='15' y='32' width='70' height='22' rx='10' fill='%23ecc94b' stroke='%23d69e2e' stroke-width='2'/><text x='50' y='18' font-size='8' text-anchor='middle' font-weight='bold' fill='%230066cc'>TUBO GNC</text></svg>";
-  const imgObleaGNC = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 80'><rect width='100' height='80' fill='%23edf2f7'/><rect x='25' y='25' width='50' height='35' rx='4' fill='%23805ad5'/><text x='50' y='18' font-size='8' text-anchor='middle' font-weight='bold' fill='%230066cc'>OBLEA GNC</text></svg>";
-
+  // Rutas relativas a las fotos subidas a GitHub
   const fotosBase = [
-    { id: 'frente', nombre: 'FOTO DE FRENTE', img: imgFrente },
-    { id: 'atras', nombre: 'FOTO DE ATRÁS', img: imgAtras },
-    { id: 'lat_conductor', nombre: 'LATERAL CONDUCTOR', img: imgLatCond },
-    { id: 'lat_acompanante', nombre: 'LATERAL ACOMPAÑANTE', img: imgLatAcomp },
-    { id: 'kilometraje', nombre: 'KILOMETRAJE / TABLERO', img: imgKms },
-    { id: 'rueda_auxilio', nombre: 'RUEDA DE AUXILIO', img: imgAuxilio }
+    { id: 'frente', nombre: 'FOTO DE FRENTE', img: 'frente.jpg' },
+    { id: 'atras', nombre: 'FOTO DE ATRÁS', img: 'atras.jpg' },
+    { id: 'lat_conductor', nombre: 'LATERAL CONDUCTOR', img: 'lat_conductor.jpg' },
+    { id: 'lat_acompanante', nombre: 'LATERAL ACOMPAÑANTE', img: 'lat_acompanante.jpg' },
+    { id: 'kilometraje', nombre: 'KILOMETRAJE / TABLERO', img: 'kilometraje.jpg' },
+    { id: 'rueda_auxilio', nombre: 'RUEDA DE AUXILIO', img: 'auxilio.jpg' }
   ];
 
   const fotosGNC = [
-    { id: 'tubo_gnc', nombre: 'TUBO DE GNC', img: imgTuboGNC },
-    { id: 'oblea_gnc', nombre: 'OBLEA DE GNC', img: imgObleaGNC }
+    { id: 'tubo_gnc', nombre: 'TUBO DE GNC', img: 'tubo_gnc.jpg' },
+    { id: 'oblea_gnc', nombre: 'OBLEA DE GNC', img: 'oblea_gnc.jpg' }
   ];
 
   let listaFotos = [];
@@ -320,18 +318,26 @@
   }
 
   async function iniciarCamara() {
+    detenerCamara();
+    document.getElementById('btn-reload-cam').classList.add('hidden');
+    
     try {
       streamCamara = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: { exact: "environment" } },
+        video: { facingMode: { ideal: "environment" }, width: { ideal: 1280 }, height: { ideal: 720 } },
         audio: false
       });
-      document.getElementById('video').srcObject = streamCamara;
+      const videoElement = document.getElementById('video');
+      videoElement.srcObject = streamCamara;
+      await videoElement.play();
     } catch (err) {
       try {
         streamCamara = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-        document.getElementById('video').srcObject = streamCamara;
+        const videoElement = document.getElementById('video');
+        videoElement.srcObject = streamCamara;
+        await videoElement.play();
       } catch (err2) {
-        alert("No se pudo acceder a la cámara. Verifique los permisos.");
+        alert("No se pudo iniciar la cámara automáticamente. Presione 'Activar Cámara'.");
+        document.getElementById('btn-reload-cam').classList.remove('hidden');
       }
     }
   }
@@ -373,6 +379,9 @@
     document.getElementById('preview-img').classList.add('hidden');
     document.getElementById('btn-capture').classList.remove('hidden');
     document.getElementById('retake-controls').classList.add('hidden');
+    if (!streamCamara || !streamCamara.active) {
+      iniciarCamara();
+    }
   }
 
   function confirmarFoto() {
@@ -392,6 +401,7 @@
   function detenerCamara() {
     if (streamCamara) {
       streamCamara.getTracks().forEach(track => track.stop());
+      streamCamara = null;
     }
   }
 
@@ -416,7 +426,7 @@
       document.getElementById('step-thanks').classList.remove('hidden');
     })
     .catch(err => {
-      alert("Ocurrió un error al enviar. Por favor intente nuevamente.");
+      alert("Error al enviar. Intente de nuevo.");
       document.getElementById('btn-submit').classList.remove('hidden');
       document.getElementById('loading').classList.add('hidden');
     });
