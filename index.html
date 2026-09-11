@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Inspección de Vehículo</title>
+  <title>Inspección de Vehículo | Seguros CBA</title>
   <style>
     * {
       box-sizing: border-box;
@@ -29,18 +29,36 @@
       padding: 20px;
       position: relative;
     }
+    .brand-header {
+      text-align: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #e9ecef;
+    }
+    .brand-logo-text {
+      font-size: 1.6em;
+      font-weight: 900;
+      color: #0066cc;
+      letter-spacing: 1px;
+    }
+    .brand-sub {
+      font-size: 0.85em;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
     h1, h2 {
       text-align: center;
       margin-bottom: 15px;
     }
     .info-header {
       background: #e9ecef;
-      padding: 10px 15px;
+      padding: 12px 15px;
       border-radius: 8px;
       margin-bottom: 20px;
-      font-size: 0.9em;
+      font-size: 0.95em;
     }
-    /* Estilo del título resaltado en rojo */
+    /* Estilo del título e instrucción resaltada */
     .photo-instruction-box {
       background-color: #ffebee;
       border-left: 5px solid #d32f2f;
@@ -53,7 +71,7 @@
     }
     .photo-instruction-box h3 {
       color: #d32f2f;
-      font-size: 1.15em;
+      font-size: 1.1em;
       text-transform: uppercase;
       font-weight: 800;
       letter-spacing: 0.5px;
@@ -64,7 +82,7 @@
       font-size: 0.85em;
       font-weight: 600;
     }
-    /* Miniatura de ejemplo superior derecha */
+    /* Miniatura superior derecha garantizada */
     .example-thumb {
       position: absolute;
       top: 10px;
@@ -73,21 +91,21 @@
       height: 65px;
       border: 2px solid #d32f2f;
       border-radius: 6px;
-      object-fit: cover;
+      object-fit: contain;
       background-color: #fff;
     }
-    .gnc-question {
-      background: #fff3cd;
-      border: 1px solid #ffeeba;
-      padding: 15px;
+    .gnc-question, .welcome-box {
+      background: #f8f9fa;
+      border: 1px solid #dee2e6;
+      padding: 20px;
       border-radius: 8px;
       margin-bottom: 20px;
       text-align: center;
     }
-    .gnc-question p {
-      font-weight: bold;
-      margin-bottom: 10px;
-      color: #856404;
+    .gnc-question p, .welcome-box p {
+      font-weight: 600;
+      margin-bottom: 15px;
+      color: #333;
     }
     .btn-group {
       display: flex;
@@ -176,15 +194,26 @@
 <body>
 
 <div class="container">
-  <h1>Inspección de Vehículo</h1>
+  <!-- ENCABEZADO SEGUROS CBA -->
+  <div class="brand-header">
+    <div class="brand-logo-text">SEGUROS CBA</div>
+    <div class="brand-sub">Inspección Digital de Vehículos</div>
+  </div>
 
   <div id="info-header" class="info-header">
     <p><strong>Dominio:</strong> <span id="lbl-dominio">-</span></p>
     <p><strong>Cliente:</strong> <span id="lbl-cliente">-</span></p>
   </div>
 
-  <!-- PASO: Pregunta GNC -->
-  <div id="step-gnc" class="gnc-question">
+  <!-- PASO 1: Bienvenida -->
+  <div id="step-welcome" class="welcome-box">
+    <h2>Bienvenido/a</h2>
+    <p>A continuación realizaremos la toma de fotografías de la unidad para el registro de inspección.</p>
+    <button onclick="comenzarInspeccion()">Iniciar Inspección 🚗</button>
+  </div>
+
+  <!-- PASO 2: Pregunta GNC -->
+  <div id="step-gnc" class="gnc-question hidden">
     <p>¿El vehículo cuenta con equipo de GNC?</p>
     <div class="btn-group">
       <button onclick="responderGNC(true)">SÍ</button>
@@ -192,11 +221,11 @@
     </div>
   </div>
 
-  <!-- PASO: Toma de Fotografías -->
+  <!-- PASO 3: Toma de Fotografías -->
   <div id="step-camera" class="camera-container hidden">
     <div class="photo-instruction-box">
-      <h3 id="photo-title">FOTO REQUERIDA</h3>
-      <p>Asegúrese de encuadrar según la imagen de referencia</p>
+      <h3 id="photo-title">⚠️ FOTO REQUERIDA</h3>
+      <p>Encuadre la toma según el esquema de guía</p>
       <img id="photo-example" class="example-thumb" src="" alt="Ejemplo">
     </div>
 
@@ -213,10 +242,10 @@
     </div>
   </div>
 
-  <!-- PASO: Enviar Inspección -->
+  <!-- PASO 4: Enviar Inspección -->
   <div id="step-send" class="hidden" style="text-align: center;">
-    <h2 style="color: #28a745; margin-bottom: 10px;">¡Fotos completadas!</h2>
-    <p style="margin-bottom: 20px; color: #666;">Haz clic en el siguiente botón para registrar tu inspección.</p>
+    <h2 style="color: #28a745; margin-bottom: 10px;">¡Fotografías completadas!</h2>
+    <p style="margin-bottom: 20px; color: #666;">Haz clic en el botón para enviar los datos.</p>
     <button id="btn-submit" class="btn-success" onclick="enviarInspeccion()">📤 Enviar Inspección</button>
     <div id="loading" class="hidden">
       <div class="spinner"></div>
@@ -224,38 +253,29 @@
     </div>
   </div>
 
-  <!-- PASO FINAL: Agradecimiento -->
+  <!-- PASO 5: Pantalla de Agradecimiento -->
   <div id="step-thanks" class="success-screen hidden">
     <svg viewBox="0 0 24 24">
       <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
     </svg>
     <h2>Inspección finalizada</h2>
-    <p>¡Gracias por elegirnos!</p>
+    <p>¡Gracias por elegir <strong>Seguros CBA</strong>!</p>
   </div>
 </div>
 
 <script>
-  // CONFIGURACIÓN: Reemplaza con tu URL de Google Apps Script
   const SCRIPT_URL = "https://script.google.com/macros/s/TU_SCRIPT_ID_AQUI/exec";
 
-  // IMÁGENES INTEGRADAS (SVG/Data-URI) para evitar problemas de carga o servidor rotos
-  const imgFrente = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 80' fill='%235c829b'><rect width='100' height='80' fill='%23edf2f7'/><path d='M25,25 L75,25 L85,45 L85,65 L15,65 L15,45 Z' stroke='%23334e68' stroke-width='3' fill='%23bcccdc'/><circle cx='25' cy='52' r='6' fill='%23f0b429'/><circle cx='75' cy='52' r='6' fill='%23f0b429'/><rect x='35' y='50' width='30' height='10' fill='%23334e68'/><text x='50' y='18' font-size='9' text-anchor='middle' font-weight='bold' fill='%23102a43'>Foto de Frente</text></svg>";
-  
-  const imgAtras = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 80' fill='%235c829b'><rect width='100' height='80' fill='%23edf2f7'/><path d='M25,25 L75,25 L85,45 L85,65 L15,65 L15,45 Z' stroke='%23334e68' stroke-width='3' fill='%23bcccdc'/><circle cx='25' cy='52' r='6' fill='%23e53e3e'/><circle cx='75' cy='52' r='6' fill='%23e53e3e'/><rect x='35' y='50' width='30' height='10' fill='%23334e68'/><text x='50' y='18' font-size='9' text-anchor='middle' font-weight='bold' fill='%23102a43'>Foto de Atrás</text></svg>";
-  
-  const imgLatCond = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 80'><rect width='100' height='80' fill='%23edf2f7'/><path d='M10,45 L25,25 L65,25 L85,40 L90,48 L90,58 L10,58 Z' fill='%23bcccdc' stroke='%23334e68' stroke-width='3'/><circle cx='28' cy='58' r='10' fill='%23485563'/><circle cx='72' cy='58' r='10' fill='%23485563'/><text x='50' y='16' font-size='8' text-anchor='middle' font-weight='bold' fill='%23102a43'>Lateral Conductor</text></svg>";
+  // Esquemas SVG incrustados para garantizar la carga correcta
+  const imgFrente = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 80'><rect width='100' height='80' fill='%23edf2f7'/><path d='M20,25 L80,25 L90,45 L90,65 L10,65 L10,45 Z' stroke='%230066cc' stroke-width='3' fill='%23bcccdc'/><circle cx='22' cy='52' r='6' fill='%23f0b429'/><circle cx='78' cy='52' r='6' fill='%23f0b429'/><rect x='35' y='52' width='30' height='8' fill='%23333'/><text x='50' y='18' font-size='9' text-anchor='middle' font-weight='bold' fill='%230066cc'>FRENTE</text></svg>";
+  const imgAtras = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 80'><rect width='100' height='80' fill='%23edf2f7'/><path d='M20,25 L80,25 L90,45 L90,65 L10,65 L10,45 Z' stroke='%230066cc' stroke-width='3' fill='%23bcccdc'/><circle cx='22' cy='52' r='6' fill='%23e53e3e'/><circle cx='78' cy='52' r='6' fill='%23e53e3e'/><rect x='35' y='52' width='30' height='8' fill='%23333'/><text x='50' y='18' font-size='9' text-anchor='middle' font-weight='bold' fill='%230066cc'>ATRÁS</text></svg>";
+  const imgLatCond = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 80'><rect width='100' height='80' fill='%23edf2f7'/><path d='M10,45 L25,25 L65,25 L85,40 L90,48 L90,58 L10,58 Z' fill='%23bcccdc' stroke='%230066cc' stroke-width='3'/><circle cx='28' cy='58' r='10' fill='%23333'/><circle cx='72' cy='58' r='10' fill='%23333'/><text x='50' y='18' font-size='8' text-anchor='middle' font-weight='bold' fill='%230066cc'>LAT. CONDUCTOR</text></svg>";
+  const imgLatAcomp = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 80'><rect width='100' height='80' fill='%23edf2f7'/><path d='M90,45 L75,25 L35,25 L15,40 L10,48 L10,58 L90,58 Z' fill='%23bcccdc' stroke='%230066cc' stroke-width='3'/><circle cx='28' cy='58' r='10' fill='%23333'/><circle cx='72' cy='58' r='10' fill='%23333'/><text x='50' y='18' font-size='7.5' text-anchor='middle' font-weight='bold' fill='%230066cc'>LAT. ACOMPAÑANTE</text></svg>";
+  const imgKms = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 80'><rect width='100' height='80' fill='%231a202c'/><circle cx='50' cy='45' r='25' stroke='%23cbd5e0' stroke-width='3' fill='none'/><path d='M50,45 L65,30' stroke='%23e53e3e' stroke-width='3'/><text x='50' y='18' font-size='8' text-anchor='middle' font-weight='bold' fill='%23ffffff'>KILOMETRAJE</text></svg>";
+  const imgAuxilio = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 80'><rect width='100' height='80' fill='%23edf2f7'/><circle cx='50' cy='45' r='24' fill='%23333'/><circle cx='50' cy='45' r='14' fill='%23cbd5e0'/><text x='50' y='18' font-size='8' text-anchor='middle' font-weight='bold' fill='%230066cc'>AUXILIO</text></svg>";
+  const imgTuboGNC = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 80'><rect width='100' height='80' fill='%23edf2f7'/><rect x='15' y='32' width='70' height='22' rx='10' fill='%23ecc94b' stroke='%23d69e2e' stroke-width='2'/><text x='50' y='18' font-size='8' text-anchor='middle' font-weight='bold' fill='%230066cc'>TUBO GNC</text></svg>";
+  const imgObleaGNC = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 80'><rect width='100' height='80' fill='%23edf2f7'/><rect x='25' y='25' width='50' height='35' rx='4' fill='%23805ad5'/><text x='50' y='18' font-size='8' text-anchor='middle' font-weight='bold' fill='%230066cc'>OBLEA GNC</text></svg>";
 
-  const imgLatAcomp = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 80'><rect width='100' height='80' fill='%23edf2f7'/><path d='M90,45 L75,25 L35,25 L15,40 L10,48 L10,58 L90,58 Z' fill='%23bcccdc' stroke='%23334e68' stroke-width='3'/><circle cx='28' cy='58' r='10' fill='%23485563'/><circle cx='72' cy='58' r='10' fill='%23485563'/><text x='50' y='16' font-size='7.5' text-anchor='middle' font-weight='bold' fill='%23102a43'>Lateral Acompañante</text></svg>";
-
-  const imgKms = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 80'><rect width='100' height='80' fill='%231a202c'/><circle cx='50' cy='45' r='28' stroke='%23cbd5e0' stroke-width='3' fill='none'/><path d='M50,45 L65,30' stroke='%23e53e3e' stroke-width='3' stroke-linecap='round'/><rect x='35' y='55' width='30' height='10' fill='%232d3748'/><text x='50' y='63' font-size='7' font-family='monospace' text-anchor='middle' fill='%2368d391'>187385</text><text x='50' y='15' font-size='8' text-anchor='middle' font-weight='bold' fill='%23ffffff'>Kilometraje</text></svg>";
-
-  const imgAuxilio = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 80'><rect width='100' height='80' fill='%23e2e8f0'/><circle cx='50' cy='42' r='26' fill='%232d3748'/><circle cx='50' cy='42' r='15' fill='%23cbd5e0' stroke='%23718096' stroke-width='3'/><circle cx='50' cy='42' r='5' fill='%232d3748'/><text x='50' y='75' font-size='8' text-anchor='middle' font-weight='bold' fill='%232d3748'>Rueda Auxilio</text></svg>";
-
-  const imgTuboGNC = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 80'><rect width='100' height='80' fill='%23edf2f7'/><rect x='15' y='30' width='70' height='25' rx='12' fill='%23ecc94b' stroke='%23d69e2e' stroke-width='2'/><rect x='10' y='38' width='8' height='9' rx='2' fill='%23718096'/><text x='50' y='18' font-size='8' text-anchor='middle' font-weight='bold' fill='%23744210'>Tubo de GNC</text></svg>";
-
-  const imgObleaGNC = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 80'><rect width='100' height='80' fill='%23edf2f7'/><rect x='20' y='20' width='60' height='40' rx='5' fill='%23805ad5' stroke='%23553c9a' stroke-width='2'/><rect x='50' y='28' width='22' height='22' fill='%23ffffff'/><text x='50' y='72' font-size='8' text-anchor='middle' font-weight='bold' fill='%2344337a'>Oblea de GNC</text></svg>";
-
-  // Lista de requerimientos
   const fotosBase = [
     { id: 'frente', nombre: 'FOTO DE FRENTE', img: imgFrente },
     { id: 'atras', nombre: 'FOTO DE ATRÁS', img: imgAtras },
@@ -276,13 +296,17 @@
   let streamCamara = null;
   let fotoTempData = null;
 
-  // Parámetros URL
   const urlParams = new URLSearchParams(window.location.search);
   const dominio = urlParams.get('dominio') || 'No especificado';
   const cliente = urlParams.get('cliente') || 'No especificado';
 
   document.getElementById('lbl-dominio').innerText = dominio;
   document.getElementById('lbl-cliente').innerText = cliente;
+
+  function comenzarInspeccion() {
+    document.getElementById('step-welcome').classList.add('hidden');
+    document.getElementById('step-gnc').classList.remove('hidden');
+  }
 
   function responderGNC(tieneGNC) {
     listaFotos = [...fotosBase];
@@ -307,7 +331,7 @@
         streamCamara = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
         document.getElementById('video').srcObject = streamCamara;
       } catch (err2) {
-        alert("No se pudo acceder a la cámara. Por favor verifique los permisos.");
+        alert("No se pudo acceder a la cámara. Verifique los permisos.");
       }
     }
   }
