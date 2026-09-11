@@ -218,7 +218,6 @@
 
   <!-- PORTADA DE BIENVENIDA -->
   <div id="step-welcome" class="welcome-box">
-    <h2 style="margin-bottom:10px;">Bienvenido/a</h2>
     <p>A continuación realizaremos la toma de fotografías de la unidad para el registro de la inspección.</p>
     <button onclick="comenzarInspeccion()">Iniciar Inspección 🚗</button>
   </div>
@@ -280,7 +279,7 @@
 <script>
   const SCRIPT_URL = "https://script.google.com/macros/s/TU_SCRIPT_ID_AQUI/exec";
 
-  // Ilustraciones vectoriales de respaldo en caso de que no cargue la imagen
+  // Ilustraciones vectoriales predeterminadas
   const svgIcons = {
     frente: `<svg viewBox="0 0 100 80"><rect x="10" y="30" width="80" height="35" rx="5" fill="#0066cc"/><circle cx="25" cy="45" r="7" fill="#fff"/><circle cx="75" cy="45" r="7" fill="#fff"/><rect x="35" y="45" width="30" height="10" fill="#333"/><rect x="20" y="15" width="60" height="15" rx="3" fill="#88c0d0"/></svg>`,
     atras: `<svg viewBox="0 0 100 80"><rect x="10" y="30" width="80" height="35" rx="5" fill="#0066cc"/><circle cx="25" cy="45" r="7" fill="#ff3333"/><circle cx="75" cy="45" r="7" fill="#ff3333"/><rect x="38" y="45" width="24" height="10" fill="#fff"/><rect x="20" y="15" width="60" height="15" rx="3" fill="#88c0d0"/></svg>`,
@@ -291,19 +290,19 @@
     gnc: `<svg viewBox="0 0 100 80"><rect x="20" y="25" width="60" height="30" rx="10" fill="#28a745"/><rect x="12" y="33" width="8" height="14" rx="2" fill="#aaa"/><text x="50" y="45" font-size="12" font-weight="bold" fill="#fff" text-anchor="middle">GNC</text></svg>`
   };
 
-  // Configuración de lista de fotos apuntando a archivos JPG locales
+  // Solo frente, atras, conductor y acompanante usan imagen .jpg
   const fotosBase = [
     { id: 'frente', nombre: 'FOTO DE FRENTE', img: './frente.jpg', svg: svgIcons.frente },
     { id: 'atras', nombre: 'FOTO DE ATRÁS', img: './atras.jpg', svg: svgIcons.atras },
-    { id: 'lat_conductor', nombre: 'LATERAL CONDUCTOR', img: './lat_conductor.jpg', svg: svgIcons.conductor },
-    { id: 'lat_acompanante', nombre: 'LATERAL ACOMPAÑANTE', img: './lat_acompanante.jpg', svg: svgIcons.acompanante },
-    { id: 'kilometraje', nombre: 'KILOMETRAJE / TABLERO', img: './kilometraje.jpg', svg: svgIcons.kilometraje },
-    { id: 'rueda_auxilio', nombre: 'RUEDA DE AUXILIO', img: './rueda_auxilio.jpg', svg: svgIcons.rueda }
+    { id: 'lat_conductor', nombre: 'LATERAL CONDUCTOR', img: './conductor.jpg', svg: svgIcons.conductor },
+    { id: 'lat_acompanante', nombre: 'LATERAL ACOMPAÑANTE', img: './acompanante.jpg', svg: svgIcons.acompanante },
+    { id: 'kilometraje', nombre: 'KILOMETRAJE / TABLERO', svg: svgIcons.kilometraje },
+    { id: 'rueda_auxilio', nombre: 'RUEDA DE AUXILIO', svg: svgIcons.rueda }
   ];
 
   const fotosGNC = [
-    { id: 'tubo_gnc', nombre: 'TUBO DE GNC', img: './tubo_gnc.jpg', svg: svgIcons.gnc },
-    { id: 'oblea_gnc', nombre: 'OBLEA DE GNC', img: './oblea_gnc.jpg', svg: svgIcons.gnc }
+    { id: 'tubo_gnc', nombre: 'TUBO DE GNC', svg: svgIcons.gnc },
+    { id: 'oblea_gnc', nombre: 'OBLEA DE GNC', svg: svgIcons.gnc }
   ];
 
   let listaFotos = [];
@@ -362,9 +361,12 @@
     const fotoActual = listaFotos[indiceFotoActual];
     document.getElementById('photo-title').innerText = `⚠️ ${fotoActual.nombre}`;
     
-    // Carga la imagen jpg con fallback a svg en caso de error
     const container = document.getElementById('example-svg-container');
-    container.innerHTML = `<img src="${fotoActual.img}" alt="${fotoActual.nombre}" onerror="this.outerHTML='${fotoActual.svg.replace(/'/g, "\\'")}';">`;
+    if (fotoActual.img) {
+      container.innerHTML = `<img src="${fotoActual.img}" alt="${fotoActual.nombre}" onerror="this.outerHTML='${fotoActual.svg.replace(/'/g, "\\'")}';">`;
+    } else {
+      container.innerHTML = fotoActual.svg;
+    }
     
     document.getElementById('video').classList.remove('hidden');
     document.getElementById('preview-img').classList.add('hidden');
