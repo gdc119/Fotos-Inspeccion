@@ -36,7 +36,7 @@
       border-bottom: 2px solid #e9ecef;
     }
     .brand-logo {
-      max-width: 180px;
+      max-width: 220px;
       height: auto;
       margin: 0 auto 10px auto;
       display: block;
@@ -64,7 +64,7 @@
       margin-bottom: 20px;
       font-size: 0.95em;
     }
-    /* Recadro de instrucción e imagen de ejemplo */
+    /* Recuadro de instrucción e imagen de ejemplo */
     .photo-instruction-box {
       background-color: #ffebee;
       border-left: 5px solid #d32f2f;
@@ -201,7 +201,7 @@
 <div class="container">
   <!-- ENCABEZADO -->
   <div class="brand-header">
-    <img src="logo.png" alt="Seguros CBA" class="brand-logo" onerror="this.style.display='none'">
+    <img src="Portada app.png" alt="Seguros CBA" class="brand-logo" onerror="this.style.display='none'">
     <div class="brand-logo-text">SEGUROS CBA</div>
     <div class="brand-sub">Inspección Digital de Vehículos</div>
   </div>
@@ -273,19 +273,19 @@
 <script>
   const SCRIPT_URL = "https://script.google.com/macros/s/TU_SCRIPT_ID_AQUI/exec";
 
-  // Rutas relativas a las fotos subidas a GitHub
+  // Rutas con los nombres exactos cargados en GitHub
   const fotosBase = [
-    { id: 'frente', nombre: 'FOTO DE FRENTE', img: 'frente.jpg' },
-    { id: 'atras', nombre: 'FOTO DE ATRÁS', img: 'atras.jpg' },
-    { id: 'lat_conductor', nombre: 'LATERAL CONDUCTOR', img: 'lat_conductor.jpg' },
-    { id: 'lat_acompanante', nombre: 'LATERAL ACOMPAÑANTE', img: 'lat_acompanante.jpg' },
-    { id: 'kilometraje', nombre: 'KILOMETRAJE / TABLERO', img: 'kilometraje.jpg' },
-    { id: 'rueda_auxilio', nombre: 'RUEDA DE AUXILIO', img: 'auxilio.jpg' }
+    { id: 'frente', nombre: 'FOTO DE FRENTE', img: 'Foto Frente.png' },
+    { id: 'atras', nombre: 'FOTO DE ATRÁS', img: 'Foto Atras.png' },
+    { id: 'lat_conductor', nombre: 'LATERAL CONDUCTOR', img: 'Lateral Conductor.png' },
+    { id: 'lat_acompanante', nombre: 'LATERAL ACOMPAÑANTE', img: 'Lateral Acompañante.png' },
+    { id: 'kilometraje', nombre: 'KILOMETRAJE / TABLERO', img: 'Kilometraje.jpg' },
+    { id: 'rueda_auxilio', nombre: 'RUEDA DE AUXILIO', img: 'Rueda Auxilio.jpg' }
   ];
 
   const fotosGNC = [
-    { id: 'tubo_gnc', nombre: 'TUBO DE GNC', img: 'tubo_gnc.jpg' },
-    { id: 'oblea_gnc', nombre: 'OBLEA DE GNC', img: 'oblea_gnc.jpg' }
+    { id: 'tubo_gnc', nombre: 'TUBO DE GNC', img: 'Tubo gnc.jpg' },
+    { id: 'oblea_gnc', nombre: 'OBLEA DE GNC', img: 'Oblea Gnc.jpg' }
   ];
 
   let listaFotos = [];
