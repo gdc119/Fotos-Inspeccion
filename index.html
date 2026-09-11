@@ -18,7 +18,7 @@
       flex-direction: column;
       align-items: center;
       min-height: 100vh;
-      padding: 10px;
+      padding: 15px;
     }
     .container {
       width: 100%;
@@ -26,15 +26,20 @@
       background: #ffffff;
       border-radius: 12px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      padding: 15px;
+      padding: 20px;
       position: relative;
     }
-    /* ENCABEZADO */
     .brand-header {
       text-align: center;
-      margin-bottom: 15px;
-      padding-bottom: 10px;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
       border-bottom: 2px solid #e9ecef;
+    }
+    .brand-logo {
+      max-width: 220px;
+      height: auto;
+      margin: 0 auto 10px auto;
+      display: block;
     }
     .brand-logo-text {
       font-size: 1.6em;
@@ -48,55 +53,50 @@
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
-    
-    /* CUADRO DE INSTRUCCIONES COMPACTO Y AMPLIO */
+    h1, h2 {
+      text-align: center;
+      margin-bottom: 15px;
+    }
     .photo-instruction-box {
       background-color: #ffebee;
       border-left: 5px solid #d32f2f;
-      padding: 10px 12px;
+      padding: 12px 15px;
       border-radius: 6px;
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
+      margin-bottom: 15px;
+      position: relative;
+      padding-right: 90px;
+      min-height: 85px;
     }
-    .photo-instruction-info h3 {
+    .photo-instruction-box h3 {
       color: #d32f2f;
-      font-size: 1.05em;
+      font-size: 1.1em;
       text-transform: uppercase;
       font-weight: 800;
       letter-spacing: 0.5px;
-      margin-bottom: 2px;
+      margin-bottom: 4px;
     }
-    .photo-instruction-info p {
+    .photo-instruction-box p {
       color: #b71c1c;
-      font-size: 0.8em;
+      font-size: 0.85em;
       font-weight: 600;
     }
-    .example-thumb-container {
-      width: 80px;
-      height: 60px;
+    .example-thumb {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 70px;
+      height: 65px;
       border: 2px solid #d32f2f;
       border-radius: 6px;
-      overflow: hidden;
-      background-color: #fff;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      object-fit: cover;
+      background-color: #eee;
     }
-    .example-thumb-container svg {
-      width: 100%;
-      height: 100%;
-    }
-
     .gnc-question, .welcome-box {
       background: #f8f9fa;
       border: 1px solid #dee2e6;
       padding: 20px;
       border-radius: 8px;
-      margin-bottom: 15px;
+      margin-bottom: 20px;
       text-align: center;
     }
     .gnc-question p, .welcome-box p {
@@ -142,20 +142,15 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 10px;
-      width: 100%;
+      gap: 12px;
     }
-    
-    /* ÁREA DE VISUALIZACIÓN EXPANDIDA */
     video, canvas, img.preview {
       width: 100%;
-      height: 65vh; /* Ocupa la mayor parte de la pantalla vertical */
-      max-height: 480px;
+      height: 320px;
       border-radius: 8px;
       background-color: #000;
       object-fit: cover;
     }
-    
     .hidden {
       display: none !important;
     }
@@ -196,15 +191,16 @@
 <body>
 
 <div class="container">
-  <!-- ENCABEZADO GENERAL (Se oculta al tomar fotos para más espacio) -->
-  <div id="brand-header" class="brand-header">
+  <!-- ENCABEZADO -->
+  <div class="brand-header">
+    <img src="./Portada%20app.png" alt="Seguros CBA" class="brand-logo" onerror="this.style.display='none'">
     <div class="brand-logo-text">SEGUROS CBA</div>
     <div class="brand-sub">Inspección Digital de Vehículos</div>
   </div>
 
   <!-- PORTADA DE BIENVENIDA -->
   <div id="step-welcome" class="welcome-box">
-    <h2 style="margin-bottom:10px;">Bienvenido/a</h2>
+    <h2>Bienvenido/a</h2>
     <p>A continuación realizaremos la toma de fotografías de la unidad para el registro de la inspección.</p>
     <button onclick="comenzarInspeccion()">Iniciar Inspección 🚗</button>
   </div>
@@ -220,12 +216,10 @@
 
   <!-- TOMA DE FOTOS -->
   <div id="step-camera" class="camera-container hidden">
-    <div class="photo-instruction-box" style="width: 100%;">
-      <div class="photo-instruction-info">
-        <h3 id="photo-title">⚠️ FOTO REQUERIDA</h3>
-        <p>Encuadre el vehículo según la guía</p>
-      </div>
-      <div id="example-svg-container" class="example-thumb-container"></div>
+    <div class="photo-instruction-box">
+      <h3 id="photo-title">⚠️ FOTO REQUERIDA</h3>
+      <p>Asegúrese de encuadrar según la imagen de referencia</p>
+      <img id="photo-example" class="example-thumb" src="" alt="Ejemplo">
     </div>
 
     <video id="video" autoplay playsinline muted></video>
@@ -236,7 +230,7 @@
       <button id="btn-capture" onclick="capturarFoto()">📷 Tomar Foto</button>
       <button id="btn-reload-cam" class="btn-secondary hidden" style="margin-top: 8px;" onclick="iniciarCamara()">🔄 Activar Cámara</button>
       <div id="retake-controls" class="btn-group hidden">
-        <button class="btn-secondary" onclick="repetirFoto()">🔄 Repetir</button>
+        <button class="btn-secondary" onclick="repetirFoto()">🔄 Volver a tomar</button>
         <button onclick="confirmarFoto()">Siguiente ➡️</button>
       </div>
     </div>
@@ -266,29 +260,19 @@
 <script>
   const SCRIPT_URL = "https://script.google.com/macros/s/TU_SCRIPT_ID_AQUI/exec";
 
-  // Ilustraciones dinámicas garantizadas que no fallan
-  const svgIcons = {
-    frente: `<svg viewBox="0 0 100 80"><rect x="10" y="30" width="80" height="35" rx="5" fill="#0066cc"/><circle cx="25" cy="45" r="7" fill="#fff"/><circle cx="75" cy="45" r="7" fill="#fff"/><rect x="35" y="45" width="30" height="10" fill="#333"/><rect x="20" y="15" width="60" height="15" rx="3" fill="#88c0d0"/></svg>`,
-    atras: `<svg viewBox="0 0 100 80"><rect x="10" y="30" width="80" height="35" rx="5" fill="#0066cc"/><circle cx="25" cy="45" r="7" fill="#ff3333"/><circle cx="75" cy="45" r="7" fill="#ff3333"/><rect x="38" y="45" width="24" height="10" fill="#fff"/><rect x="20" y="15" width="60" height="15" rx="3" fill="#88c0d0"/></svg>`,
-    conductor: `<svg viewBox="0 0 100 80"><path d="M10 45 L25 25 L75 25 L90 45 L90 60 L10 60 Z" fill="#0066cc"/><circle cx="25" cy="60" r="10" fill="#333"/><circle cx="75" cy="60" r="10" fill="#333"/><rect x="30" y="30" width="18" height="12" fill="#88c0d0"/><rect x="52" y="30" width="18" height="12" fill="#88c0d0"/></svg>`,
-    acompanante: `<svg viewBox="0 0 100 80" style="transform: scaleX(-1);"><path d="M10 45 L25 25 L75 25 L90 45 L90 60 L10 60 Z" fill="#0066cc"/><circle cx="25" cy="60" r="10" fill="#333"/><circle cx="75" cy="60" r="10" fill="#333"/><rect x="30" y="30" width="18" height="12" fill="#88c0d0"/><rect x="52" y="30" width="18" height="12" fill="#88c0d0"/></svg>`,
-    kilometraje: `<svg viewBox="0 0 100 80"><circle cx="50" cy="45" r="30" fill="#333"/><path d="M50 45 L65 25" stroke="#ff3333" stroke-width="4" stroke-linecap="round"/><circle cx="50" cy="45" r="5" fill="#fff"/><text x="50" y="65" font-size="10" fill="#fff" text-anchor="middle">KM</text></svg>`,
-    rueda: `<svg viewBox="0 0 100 80"><circle cx="50" cy="40" r="30" fill="#333"/><circle cx="50" cy="40" r="18" fill="#aaa"/><circle cx="50" cy="40" r="6" fill="#333"/></svg>`,
-    gnc: `<svg viewBox="0 0 100 80"><rect x="20" y="25" width="60" height="30" rx="10" fill="#28a745"/><rect x="12" y="33" width="8" height="14" rx="2" fill="#aaa"/><text x="50" y="45" font-size="12" font-weight="bold" fill="#fff" text-anchor="middle">GNC</text></svg>`
-  };
-
+  // Rutas relativas explícitas con ./
   const fotosBase = [
-    { id: 'frente', nombre: 'FOTO DE FRENTE', svg: svgIcons.frente },
-    { id: 'atras', nombre: 'FOTO DE ATRÁS', svg: svgIcons.atras },
-    { id: 'lat_conductor', nombre: 'LATERAL CONDUCTOR', svg: svgIcons.conductor },
-    { id: 'lat_acompanante', nombre: 'LATERAL ACOMPAÑANTE', svg: svgIcons.acompanante },
-    { id: 'kilometraje', nombre: 'KILOMETRAJE / TABLERO', svg: svgIcons.kilometraje },
-    { id: 'rueda_auxilio', nombre: 'RUEDA DE AUXILIO', svg: svgIcons.rueda }
+    { id: 'frente', nombre: 'FOTO DE FRENTE', img: './frente.png' },
+    { id: 'atras', nombre: 'FOTO DE ATRÁS', img: './atras.png' },
+    { id: 'lat_conductor', nombre: 'LATERAL CONDUCTOR', img: './conductor.png' },
+    { id: 'lat_acompanante', nombre: 'LATERAL ACOMPAÑANTE', img: './acompanante.png' },
+    { id: 'kilometraje', nombre: 'KILOMETRAJE / TABLERO', img: './Kilometraje.jpg' },
+    { id: 'rueda_auxilio', nombre: 'RUEDA DE AUXILIO', img: './Rueda%20Auxilio.jpg' }
   ];
 
   const fotosGNC = [
-    { id: 'tubo_gnc', nombre: 'TUBO DE GNC', svg: svgIcons.gnc },
-    { id: 'oblea_gnc', nombre: 'OBLEA DE GNC', svg: svgIcons.gnc }
+    { id: 'tubo_gnc', nombre: 'TUBO DE GNC', img: './Tubo%20gnc.jpg' },
+    { id: 'oblea_gnc', nombre: 'OBLEA DE GNC', img: './Oblea%20Gnc.jpg' }
   ];
 
   let listaFotos = [];
@@ -311,8 +295,6 @@
     if (tieneGNC) {
       listaFotos = listaFotos.concat(fotosGNC);
     }
-    // Ocultar encabezado para expandir el área
-    document.getElementById('brand-header').classList.add('hidden');
     document.getElementById('step-gnc').classList.add('hidden');
     document.getElementById('step-camera').classList.remove('hidden');
     iniciarCamara();
@@ -347,7 +329,7 @@
   function mostrarPasoFoto() {
     const fotoActual = listaFotos[indiceFotoActual];
     document.getElementById('photo-title').innerText = `⚠️ ${fotoActual.nombre}`;
-    document.getElementById('example-svg-container').innerHTML = fotoActual.svg;
+    document.getElementById('photo-example').src = fotoActual.img;
     
     document.getElementById('video').classList.remove('hidden');
     document.getElementById('preview-img').classList.add('hidden');
@@ -425,7 +407,6 @@
     })
     .then(() => {
       document.getElementById('step-send').classList.add('hidden');
-      document.getElementById('brand-header').classList.remove('hidden'); // Vuelve a mostrar marca al finalizar
       document.getElementById('step-thanks').classList.remove('hidden');
     })
     .catch(err => {
