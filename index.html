@@ -57,7 +57,6 @@
       text-align: center;
       margin-bottom: 15px;
     }
-    /* Recuadro de instrucción e imagen de ejemplo */
     .photo-instruction-box {
       background-color: #ffebee;
       border-left: 5px solid #d32f2f;
@@ -261,19 +260,19 @@
 <script>
   const SCRIPT_URL = "https://script.google.com/macros/s/TU_SCRIPT_ID_AQUI/exec";
 
-  // Rutas con codificación de caracteres para asegurar compatibilidad total en GitHub
+  // Rutas simplificadas con nombres limpios
   const fotosBase = [
-    { id: 'frente', nombre: 'FOTO DE FRENTE', img: 'Foto%20Frente.png' },
-    { id: 'atras', nombre: 'FOTO DE ATRÁS', img: 'Foto%20Atras.png' },
-    { id: 'lat_conductor', nombre: 'LATERAL CONDUCTOR', img: 'Lateral%20Conductor.png' },
-    { id: 'lat_acompanante', nombre: 'LATERAL ACOMPAÑANTE', img: 'Lateral%20Acompa%C3%B1ante.png' },
+    { id: 'frente', nombre: 'FOTO DE FRENTE', img: 'frente.png' },
+    { id: 'atras', nombre: 'FOTO DE ATRÁS', img: 'atras.png' },
+    { id: 'lat_conductor', nombre: 'LATERAL CONDUCTOR', img: 'conductor.png' },
+    { id: 'lat_acompanante', nombre: 'LATERAL ACOMPAÑANTE', img: 'acompanante.png' },
     { id: 'kilometraje', nombre: 'KILOMETRAJE / TABLERO', img: 'Kilometraje.jpg' },
-    { id: 'rueda_auxilio', nombre: 'RUEDA DE AUXILIO', img: 'Rueda%20Auxilio.jpg' }
+    { id: 'rueda_auxilio', nombre: 'RUEDA DE AUXILIO', img: 'Rueda Auxilio.jpg' }
   ];
 
   const fotosGNC = [
-    { id: 'tubo_gnc', nombre: 'TUBO DE GNC', img: 'Tubo%20gnc.jpg' },
-    { id: 'oblea_gnc', nombre: 'OBLEA DE GNC', img: 'Oblea%20Gnc.jpg' }
+    { id: 'tubo_gnc', nombre: 'TUBO DE GNC', img: 'Tubo gnc.jpg' },
+    { id: 'oblea_gnc', nombre: 'OBLEA DE GNC', img: 'Oblea Gnc.jpg' }
   ];
 
   let listaFotos = [];
