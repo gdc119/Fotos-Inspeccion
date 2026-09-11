@@ -29,7 +29,8 @@
       padding: 15px;
       position: relative;
     }
-    /* ENCABEZADO Y BIENVENIDA (Se ocultará al iniciar fotos) */
+    
+    /* ENCABEZADO SUPERIOR (Solo visible en la portada y pantalla final) */
     .brand-header {
       text-align: center;
       margin-bottom: 15px;
@@ -80,14 +81,26 @@
       font-size: 0.8em;
       font-weight: 600;
     }
-    .example-thumb {
-      width: 75px;
+    .example-thumb-container {
+      width: 80px;
       height: 60px;
       border: 2px solid #d32f2f;
       border-radius: 6px;
-      object-fit: cover;
-      background-color: #eee;
+      overflow: hidden;
+      background-color: #fff;
       flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .example-thumb-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .example-thumb-container svg {
+      width: 100%;
+      height: 100%;
     }
 
     .gnc-question, .welcome-box {
@@ -145,11 +158,11 @@
       width: 100%;
     }
     
-    /* VISOR DE CÁMARA AMPLIO */
+    /* ÁREA DE VISUALIZACIÓN MAXIMIZADA */
     video, canvas, img.preview {
       width: 100%;
-      height: 60vh;
-      max-height: 480px;
+      height: 70vh;
+      max-height: 520px;
       border-radius: 8px;
       background-color: #000;
       object-fit: cover;
@@ -195,7 +208,7 @@
 <body>
 
 <div class="container">
-  <!-- SECCIÓN SUPERIOR DE MARCA (Se oculta al iniciar fotos) -->
+  <!-- LOGO Y ENCABEZADO (Únicamente visible al abrir el link) -->
   <div id="brand-header" class="brand-header">
     <p style="font-size: 0.9em; font-weight: bold; color: #003366; margin-bottom: 5px;">Bienvenidos a</p>
     <img src="./Portada%20app.png" alt="Seguros CBA" class="brand-logo" onerror="this.style.display='none'">
@@ -226,7 +239,7 @@
         <h3 id="photo-title">⚠️ FOTO REQUERIDA</h3>
         <p>Asegúrese de encuadrar según la imagen de referencia</p>
       </div>
-      <img id="photo-example" class="example-thumb" src="" alt="Ejemplo">
+      <div id="example-svg-container" class="example-thumb-container"></div>
     </div>
 
     <video id="video" autoplay playsinline muted></video>
@@ -267,18 +280,30 @@
 <script>
   const SCRIPT_URL = "https://script.google.com/macros/s/TU_SCRIPT_ID_AQUI/exec";
 
+  // Ilustraciones vectoriales de respaldo en caso de que no cargue la imagen
+  const svgIcons = {
+    frente: `<svg viewBox="0 0 100 80"><rect x="10" y="30" width="80" height="35" rx="5" fill="#0066cc"/><circle cx="25" cy="45" r="7" fill="#fff"/><circle cx="75" cy="45" r="7" fill="#fff"/><rect x="35" y="45" width="30" height="10" fill="#333"/><rect x="20" y="15" width="60" height="15" rx="3" fill="#88c0d0"/></svg>`,
+    atras: `<svg viewBox="0 0 100 80"><rect x="10" y="30" width="80" height="35" rx="5" fill="#0066cc"/><circle cx="25" cy="45" r="7" fill="#ff3333"/><circle cx="75" cy="45" r="7" fill="#ff3333"/><rect x="38" y="45" width="24" height="10" fill="#fff"/><rect x="20" y="15" width="60" height="15" rx="3" fill="#88c0d0"/></svg>`,
+    conductor: `<svg viewBox="0 0 100 80"><path d="M10 45 L25 25 L75 25 L90 45 L90 60 L10 60 Z" fill="#0066cc"/><circle cx="25" cy="60" r="10" fill="#333"/><circle cx="75" cy="60" r="10" fill="#333"/><rect x="30" y="30" width="18" height="12" fill="#88c0d0"/><rect x="52" y="30" width="18" height="12" fill="#88c0d0"/></svg>`,
+    acompanante: `<svg viewBox="0 0 100 80" style="transform: scaleX(-1);"><path d="M10 45 L25 25 L75 25 L90 45 L90 60 L10 60 Z" fill="#0066cc"/><circle cx="25" cy="60" r="10" fill="#333"/><circle cx="75" cy="60" r="10" fill="#333"/><rect x="30" y="30" width="18" height="12" fill="#88c0d0"/><rect x="52" y="30" width="18" height="12" fill="#88c0d0"/></svg>`,
+    kilometraje: `<svg viewBox="0 0 100 80"><circle cx="50" cy="45" r="30" fill="#333"/><path d="M50 45 L65 25" stroke="#ff3333" stroke-width="4" stroke-linecap="round"/><circle cx="50" cy="45" r="5" fill="#fff"/><text x="50" y="65" font-size="10" fill="#fff" text-anchor="middle">KM</text></svg>`,
+    rueda: `<svg viewBox="0 0 100 80"><circle cx="50" cy="40" r="30" fill="#333"/><circle cx="50" cy="40" r="18" fill="#aaa"/><circle cx="50" cy="40" r="6" fill="#333"/></svg>`,
+    gnc: `<svg viewBox="0 0 100 80"><rect x="20" y="25" width="60" height="30" rx="10" fill="#28a745"/><rect x="12" y="33" width="8" height="14" rx="2" fill="#aaa"/><text x="50" y="45" font-size="12" font-weight="bold" fill="#fff" text-anchor="middle">GNC</text></svg>`
+  };
+
+  // Configuración de lista de fotos apuntando a archivos JPG locales
   const fotosBase = [
-    { id: 'frente', nombre: 'FOTO DE FRENTE', img: './frente.png' },
-    { id: 'atras', nombre: 'FOTO DE ATRÁS', img: './atras.png' },
-    { id: 'lat_conductor', nombre: 'LATERAL CONDUCTOR', img: './conductor.png' },
-    { id: 'lat_acompanante', nombre: 'LATERAL ACOMPAÑANTE', img: './acompanante.png' },
-    { id: 'kilometraje', nombre: 'KILOMETRAJE / TABLERO', img: './Kilometraje.jpg' },
-    { id: 'rueda_auxilio', nombre: 'RUEDA DE AUXILIO', img: './Rueda%20Auxilio.jpg' }
+    { id: 'frente', nombre: 'FOTO DE FRENTE', img: './frente.jpg', svg: svgIcons.frente },
+    { id: 'atras', nombre: 'FOTO DE ATRÁS', img: './atras.jpg', svg: svgIcons.atras },
+    { id: 'lat_conductor', nombre: 'LATERAL CONDUCTOR', img: './lat_conductor.jpg', svg: svgIcons.conductor },
+    { id: 'lat_acompanante', nombre: 'LATERAL ACOMPAÑANTE', img: './lat_acompanante.jpg', svg: svgIcons.acompanante },
+    { id: 'kilometraje', nombre: 'KILOMETRAJE / TABLERO', img: './kilometraje.jpg', svg: svgIcons.kilometraje },
+    { id: 'rueda_auxilio', nombre: 'RUEDA DE AUXILIO', img: './rueda_auxilio.jpg', svg: svgIcons.rueda }
   ];
 
   const fotosGNC = [
-    { id: 'tubo_gnc', nombre: 'TUBO DE GNC', img: './Tubo%20gnc.jpg' },
-    { id: 'oblea_gnc', nombre: 'OBLEA DE GNC', img: './Oblea%20Gnc.jpg' }
+    { id: 'tubo_gnc', nombre: 'TUBO DE GNC', img: './tubo_gnc.jpg', svg: svgIcons.gnc },
+    { id: 'oblea_gnc', nombre: 'OBLEA DE GNC', img: './oblea_gnc.jpg', svg: svgIcons.gnc }
   ];
 
   let listaFotos = [];
@@ -292,6 +317,7 @@
   const cliente = urlParams.get('cliente') || 'No especificado';
 
   function comenzarInspeccion() {
+    document.getElementById('brand-header').classList.add('hidden');
     document.getElementById('step-welcome').classList.add('hidden');
     document.getElementById('step-gnc').classList.remove('hidden');
   }
@@ -301,8 +327,6 @@
     if (tieneGNC) {
       listaFotos = listaFotos.concat(fotosGNC);
     }
-    // OCULTA EL HEADER COMPLETO (LOGO Y BIENVENIDA)
-    document.getElementById('brand-header').classList.add('hidden');
     document.getElementById('step-gnc').classList.add('hidden');
     document.getElementById('step-camera').classList.remove('hidden');
     iniciarCamara();
@@ -337,7 +361,10 @@
   function mostrarPasoFoto() {
     const fotoActual = listaFotos[indiceFotoActual];
     document.getElementById('photo-title').innerText = `⚠️ ${fotoActual.nombre}`;
-    document.getElementById('photo-example').src = fotoActual.img;
+    
+    // Carga la imagen jpg con fallback a svg en caso de error
+    const container = document.getElementById('example-svg-container');
+    container.innerHTML = `<img src="${fotoActual.img}" alt="${fotoActual.nombre}" onerror="this.outerHTML='${fotoActual.svg.replace(/'/g, "\\'")}';">`;
     
     document.getElementById('video').classList.remove('hidden');
     document.getElementById('preview-img').classList.add('hidden');
