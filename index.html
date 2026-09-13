@@ -280,7 +280,7 @@
   const fotosBase = [
     { id: 'frente', nombre: 'FOTO DE FRENTE', img: './frente.jpg' },
     { id: 'atras', nombre: 'FOTO DE ATRÁS', img: './atras.jpg' },
-    { id: 'lat_conductor', nombre: 'LATERAL CONDUCTOR', img: './conducto.jpg' },
+    { id: 'lat_conductor', nombre: 'LATERAL CONDUCTOR', img: './conductor.jpg' },
     { id: 'lat_acompanante', nombre: 'LATERAL ACOMPAÑANTE', img: './acompanante.jpg' },
     { id: 'kilometraje', nombre: 'KILOMETRAJE / TABLERO', img: './km.jpg' },
     { id: 'parabrisas', nombre: 'PARABRISAS / CRISTALES', img: './parabrisas.jpg' },
@@ -356,7 +356,6 @@
     imgObj.src = fotoActual.img;
     imgObj.alt = fotoActual.nombre;
     imgObj.onerror = function() {
-      // Si la imagen JPG no se encuentra en el repositorio, oculta el marco en lugar de mostrar íconos SVG rotos
       container.style.display = 'none';
     };
     imgObj.onload = function() {
