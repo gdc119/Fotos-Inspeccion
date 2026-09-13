@@ -108,11 +108,68 @@
       margin-bottom: 15px;
       text-align: center;
     }
-    .gnc-question p, .welcome-box p {
+    .gnc-question p.question-title, .welcome-box p {
       font-weight: 600;
       margin-bottom: 15px;
       color: #333;
     }
+
+    /* ESTILOS PARA INDICACIONES ADICIONALES GNC */
+    .horizontal-notice {
+      margin-top: 20px;
+      padding-top: 15px;
+      border-top: 1px dashed #ccc;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .phone-icon-horizontal {
+      width: 50px;
+      height: 30px;
+      border: 2.5px solid #0066cc;
+      border-radius: 5px;
+      position: relative;
+      background-color: #e6f0fa;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 4px;
+    }
+    .phone-icon-horizontal::before {
+      content: '';
+      width: 30px;
+      height: 18px;
+      border: 1.5px solid #0066cc;
+      border-radius: 2px;
+      position: absolute;
+      left: 4px;
+    }
+    .phone-icon-horizontal::after {
+      content: '';
+      width: 4px;
+      height: 4px;
+      background-color: #0066cc;
+      border-radius: 50%;
+    }
+    .horizontal-text {
+      font-size: 0.9em;
+      font-weight: 700;
+      color: #0066cc;
+      text-transform: uppercase;
+    }
+    .location-notice {
+      margin-top: 12px;
+      background-color: #fff3cd;
+      border: 1px solid #ffeeba;
+      color: #856404;
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 0.85em;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
     .btn-group {
       display: flex;
       gap: 10px;
@@ -219,12 +276,23 @@
     <button onclick="comenzarInspeccion()">Iniciar Inspección 🚗</button>
   </div>
 
-  <!-- PREGUNTA GNC -->
+  <!-- PREGUNTA GNC Y INDICACIONES -->
   <div id="step-gnc" class="gnc-question hidden">
-    <p>¿El vehículo cuenta con equipo de GNC?</p>
+    <p class="question-title">¿El vehículo cuenta con equipo de GNC?</p>
     <div class="btn-group">
       <button onclick="responderGNC(true)">SÍ</button>
       <button class="btn-secondary" onclick="responderGNC(false)">NO</button>
+    </div>
+
+    <!-- INDICACIÓN DE CELULAR HORIZONTAL -->
+    <div class="horizontal-notice">
+      <div class="phone-icon-horizontal"></div>
+      <p class="horizontal-text">Tomar todas las fotos con el celular en forma horizontal</p>
+    </div>
+
+    <!-- AVISO DE UBICACIÓN Y MOVIMIENTO -->
+    <div class="location-notice">
+      ⚠️ Las fotos deben ser sacadas todas en un mismo lugar sin mover el vehículo.
     </div>
   </div>
 
@@ -276,7 +344,7 @@
 <script>
   const SCRIPT_URL = "https://script.google.com/macros/s/TU_SCRIPT_ID_AQUI/exec";
 
-  // Lista de fotografías base con fallback si falla la extensión
+  // Lista de fotografías base
   const fotosBase = [
     { id: 'frente', nombre: 'FOTO DE FRENTE', img: './frente.jpg' },
     { id: 'atras', nombre: 'FOTO DE ATRÁS', img: './atras.jpg' },
@@ -356,7 +424,6 @@
     imgObj.src = fotoActual.img;
     imgObj.alt = fotoActual.nombre;
 
-    // Intenta buscar acompañante.png si no encuentra acompanante.jpg
     imgObj.onerror = function() {
       if (this.src.endsWith('acompanante.jpg')) {
         this.src = './acompanante.png';
