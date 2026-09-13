@@ -56,7 +56,7 @@
       letter-spacing: 0.5px;
     }
     
-    /* BLOQUE DE INSTRUCCIONES COMPACTO Y LIMPIO */
+    /* BLOQUE DE INSTRUCCIONES */
     .photo-instruction-box {
       background-color: #ffebee;
       border-left: 5px solid #d32f2f;
@@ -276,7 +276,7 @@
 <script>
   const SCRIPT_URL = "https://script.google.com/macros/s/TU_SCRIPT_ID_AQUI/exec";
 
-  // Lista de fotografías base
+  // Lista de fotografías base con fallback si falla la extensión
   const fotosBase = [
     { id: 'frente', nombre: 'FOTO DE FRENTE', img: './frente.jpg' },
     { id: 'atras', nombre: 'FOTO DE ATRÁS', img: './atras.jpg' },
@@ -355,8 +355,14 @@
     const imgObj = new Image();
     imgObj.src = fotoActual.img;
     imgObj.alt = fotoActual.nombre;
+
+    // Intenta buscar acompañante.png si no encuentra acompanante.jpg
     imgObj.onerror = function() {
-      container.style.display = 'none';
+      if (this.src.endsWith('acompanante.jpg')) {
+        this.src = './acompanante.png';
+      } else {
+        container.style.display = 'none';
+      }
     };
     imgObj.onload = function() {
       container.style.display = 'flex';
