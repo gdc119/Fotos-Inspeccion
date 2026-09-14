@@ -3,489 +3,183 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Inspección de Vehículo | Seguros CBA</title>
+  <title>Inspección de Vehículo</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
     body {
-      background-color: #f4f6f8;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 15px;
+      background-color: #f4f4f9;
       color: #333;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      padding: 10px;
     }
     .container {
-      width: 100%;
       max-width: 500px;
-      background: #ffffff;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      padding: 15px;
-      position: relative;
-    }
-    
-    /* ENCABEZADO SUPERIOR */
-    .brand-header {
+      margin: 0 auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
       text-align: center;
+    }
+    h2 {
+      margin-top: 0;
+      color: #0056b3;
+    }
+    .ejemplo-img {
+      width: 100%;
+      max-height: 250px;
+      object-fit: contain;
+      border: 1px solid #ddd;
+      border-radius: 6px;
       margin-bottom: 15px;
-      padding-bottom: 10px;
-      border-bottom: 2px solid #e9ecef;
+      background-color: #eee;
     }
-    .brand-logo {
-      max-width: 200px;
-      height: auto;
-      margin: 0 auto 10px auto;
-      display: block;
-    }
-    .brand-logo-text {
-      font-size: 1.6em;
-      font-weight: 900;
-      color: #0066cc;
-      letter-spacing: 1px;
-    }
-    .brand-sub {
-      font-size: 0.85em;
-      color: #666;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    
-    /* BLOQUE DE INSTRUCCIONES */
-    .photo-instruction-box {
-      background-color: #ffebee;
-      border-left: 5px solid #d32f2f;
-      padding: 10px 12px;
+    .camera-box {
+      width: 100%;
+      height: 250px;
+      background-color: #000;
       border-radius: 6px;
-      margin-bottom: 10px;
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
-    .photo-instruction-info h3 {
-      color: #d32f2f;
-      font-size: 1.05em;
-      text-transform: uppercase;
-      font-weight: 800;
-      letter-spacing: 0.5px;
-      margin-bottom: 2px;
-    }
-    .photo-instruction-info p {
-      color: #b71c1c;
-      font-size: 0.8em;
-      font-weight: 600;
-    }
-    .example-thumb-container {
-      width: 80px;
-      height: 60px;
-      border: 2px solid #d32f2f;
-      border-radius: 6px;
-      overflow: hidden;
-      background-color: #fff;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
+      margin-bottom: 15px;
+      position: relative;
+      overflow: hidden;
     }
-    .example-thumb-container img {
+    video, canvas {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      display: block;
     }
-
-    .gnc-question, .welcome-box {
-      background: #f8f9fa;
-      border: 1px solid #dee2e6;
-      padding: 20px;
-      border-radius: 8px;
-      margin-bottom: 15px;
-      text-align: center;
-    }
-    .gnc-question p.question-title, .welcome-box p {
-      font-weight: 600;
-      margin-bottom: 15px;
-      color: #333;
-    }
-
-    /* ESTILOS PARA INDICACIONES ADICIONALES GNC */
-    .horizontal-notice {
-      margin-top: 20px;
-      padding-top: 15px;
-      border-top: 1px dashed #ccc;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-    }
-    .phone-icon-horizontal {
-      width: 50px;
-      height: 30px;
-      border: 2.5px solid #0066cc;
-      border-radius: 5px;
-      position: relative;
-      background-color: #e6f0fa;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      padding-right: 4px;
-    }
-    .phone-icon-horizontal::before {
-      content: '';
-      width: 30px;
-      height: 18px;
-      border: 1.5px solid #0066cc;
-      border-radius: 2px;
-      position: absolute;
-      left: 4px;
-    }
-    .phone-icon-horizontal::after {
-      content: '';
-      width: 4px;
-      height: 4px;
-      background-color: #0066cc;
-      border-radius: 50%;
-    }
-    .horizontal-text {
-      font-size: 0.9em;
-      font-weight: 700;
-      color: #0066cc;
-      text-transform: uppercase;
-    }
-    .location-notice {
-      margin-top: 12px;
-      background-color: #fff3cd;
-      border: 1px solid #ffeeba;
-      color: #856404;
-      padding: 10px;
-      border-radius: 6px;
-      font-size: 0.85em;
-      font-weight: 700;
-      line-height: 1.3;
-    }
-
-    .btn-group {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-    }
-    button {
-      background-color: #0066cc;
+    .btn {
+      background-color: #28a745;
       color: white;
       border: none;
       padding: 12px 20px;
-      border-radius: 8px;
-      font-size: 1em;
-      font-weight: bold;
+      font-size: 16px;
+      border-radius: 5px;
       cursor: pointer;
       width: 100%;
-      transition: background 0.2s;
+      margin-top: 10px;
     }
-    button:hover {
-      background-color: #0052a3;
+    .btn:disabled {
+      background-color: #ccc;
     }
-    button.btn-secondary {
-      background-color: #6c757d;
+    .btn-capture {
+      background-color: #007bff;
     }
-    button.btn-secondary:hover {
-      background-color: #5a6268;
+    .preview-container {
+      display: none;
     }
-    button.btn-success {
-      background-color: #28a745;
-      font-size: 1.1em;
-      padding: 15px;
-    }
-    button.btn-success:hover {
-      background-color: #218838;
-    }
-    .camera-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-      width: 100%;
-    }
-    
-    /* ÁREA DE VISUALIZACIÓN */
-    video, canvas, img.preview {
-      width: 100%;
-      height: 70vh;
-      max-height: 520px;
-      border-radius: 8px;
-      background-color: #000;
-      object-fit: cover;
-    }
-    
-    .hidden {
-      display: none !important;
-    }
-    .success-screen {
-      text-align: center;
-      padding: 30px 10px;
-    }
-    .success-screen svg {
-      width: 80px;
-      height: 80px;
-      fill: #28a745;
-      margin-bottom: 20px;
-    }
-    .success-screen h2 {
-      color: #28a745;
-      font-size: 1.8em;
-      margin-bottom: 10px;
-    }
-    .success-screen p {
-      font-size: 1.2em;
-      color: #555;
-    }
-    .spinner {
-      border: 4px solid rgba(0, 0, 0, 0.1);
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      border-left-color: #0066cc;
-      animation: spin 1s linear infinite;
-      margin: 10px auto;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+    #status-msg {
+      margin-top: 15px;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
 
 <div class="container">
-  <!-- LOGO Y ENCABEZADO -->
-  <div id="brand-header" class="brand-header">
-    <p style="font-size: 0.9em; font-weight: bold; color: #003366; margin-bottom: 5px;">Bienvenidos a</p>
-    <img src="./Portada%20app.png" alt="Seguros CBA" class="brand-logo" onerror="this.style.display='none'">
-    <div class="brand-logo-text">SEGUROS CBA</div>
-    <div class="brand-sub">Inspección Digital de Vehículos</div>
-  </div>
+  <div id="paso-container">
+    <h2 id="titulo-paso">Paso 1: Tarjeta Verde</h2>
+    <p id="desc-paso">Ubique la tarjeta verde frente a la cámara guiándose con el ejemplo:</p>
 
-  <!-- PORTADA DE BIENVENIDA -->
-  <div id="step-welcome" class="welcome-box">
-    <p>A continuación realizaremos la toma de fotografías de la unidad para el registro de la inspección.</p>
-    <button onclick="comenzarInspeccion()">Iniciar Inspección 🚗</button>
-  </div>
+    <!-- Imagen de muestra que toma del repositorio -->
+    <img id="imagen-ejemplo" class="ejemplo-img" src="verde.jpg" alt="Ejemplo de foto">
 
-  <!-- PREGUNTA GNC Y INDICACIONES -->
-  <div id="step-gnc" class="gnc-question hidden">
-    <p class="question-title">¿El vehículo cuenta con equipo de GNC?</p>
-    <div class="btn-group">
-      <button onclick="responderGNC(true)">SÍ</button>
-      <button class="btn-secondary" onclick="responderGNC(false)">NO</button>
+    <!-- Visor de la cámara -->
+    <div class="camera-box" id="box-camera">
+      <video id="webcam" autoplay playsinline style="display:none;"></video>
+      <img id="foto-preview" style="display:none; width:100%; height:100%; object-fit:cover;">
     </div>
 
-    <!-- INDICACIÓN DE CELULAR HORIZONTAL -->
-    <div class="horizontal-notice">
-      <div class="phone-icon-horizontal"></div>
-      <p class="horizontal-text">Tomar todas las fotos con el celular en forma horizontal</p>
-    </div>
-
-    <!-- AVISO DE UBICACIÓN Y MOVIMIENTO -->
-    <div class="location-notice">
-      ⚠️ Las fotos deben ser sacadas todas en un mismo lugar sin mover el vehículo.
-    </div>
+    <button id="btn-camara" class="btn" onclick="activarCamara()">Abrir Cámara</button>
+    <button id="btn-capturar" class="btn btn-capture" onclick="tomarFoto()" style="display:none;">Capturar Foto</button>
+    <button id="btn-repetir" class="btn" onclick="repetirFoto()" style="display:none; background-color:#ffc107; color:#000;">Reintentar Foto</button>
+    <button id="btn-siguiente" class="btn" onclick="siguientePaso()" style="display:none;">Confirmar y Continuar</button>
   </div>
 
-  <!-- TOMA DE FOTOS -->
-  <div id="step-camera" class="camera-container hidden">
-    <div class="photo-instruction-box" style="width: 100%;">
-      <div class="photo-instruction-info">
-        <h3 id="photo-title">FOTO REQUERIDA</h3>
-        <p>Asegúrese de encuadrar según la imagen de referencia</p>
-      </div>
-      <div id="example-svg-container" class="example-thumb-container"></div>
-    </div>
-
-    <video id="video" autoplay playsinline muted></video>
-    <canvas id="canvas" class="hidden"></canvas>
-    <img id="preview-img" class="preview hidden" alt="Vista previa">
-
-    <div id="camera-controls" style="width: 100%;">
-      <button id="btn-capture" onclick="capturarFoto()">📷 Tomar Foto</button>
-      <button id="btn-reload-cam" class="btn-secondary hidden" style="margin-top: 8px;" onclick="iniciarCamara()">🔄 Activar Cámara</button>
-      <div id="retake-controls" class="btn-group hidden">
-        <button class="btn-secondary" onclick="repetirFoto()">🔄 Volver a tomar</button>
-        <button onclick="confirmarFoto()">Siguiente ➡️</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ENVIAR INSPECCIÓN -->
-  <div id="step-send" class="hidden" style="text-align: center;">
-    <h2 style="color: #28a745; margin-bottom: 10px;">¡Fotos completadas!</h2>
-    <p style="margin-bottom: 20px; color: #666;">Haz clic en el botón para enviar la inspección.</p>
-    <button id="btn-submit" class="btn-success" onclick="enviarInspeccion()">📤 Enviar Inspección</button>
-    <div id="loading" class="hidden">
-      <div class="spinner"></div>
-      <p>Enviando información, por favor espere...</p>
-    </div>
-  </div>
-
-  <!-- PANTALLA FINAL -->
-  <div id="step-thanks" class="success-screen hidden">
-    <svg viewBox="0 0 24 24">
-      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-    </svg>
-    <h2>Inspección finalizada</h2>
-    <p>¡Gracias por elegir <strong>Seguros CBA</strong>!</p>
-  </div>
+  <div id="status-msg"></div>
 </div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzYdMMr1TVUACtd100dBLwpBeyB5igsuYg5EbtwQldwPLjN5ovZIu83zSgGQoYSAk5q/exec";
+  // Pega aquí la URL de tu Web App publicada en Apps Script (que termina en /exec)
+  const SCRIPT_URL = "PEGAR_AQUI_TU_URL_DE_APPS_SCRIPT";
 
-  // Lista de fotografías base
-  const fotosBase = [
-    { id: 'frente', nombre: 'FOTO DE FRENTE', img: './frente.jpg' },
-    { id: 'atras', nombre: 'FOTO DE ATRÁS', img: './atras.jpg' },
-    { id: 'lat_conductor', nombre: 'LATERAL CONDUCTOR', img: './conductor.jpg' },
-    { id: 'lat_acompanante', nombre: 'LATERAL ACOMPAÑANTE', img: './acompanante.jpg' },
-    { id: 'kilometraje', nombre: 'KILOMETRAJE / TABLERO', img: './km.jpg' },
-    { id: 'parabrisas', nombre: 'PARABRISAS / CRISTALES', img: './parabrisas.jpg' },
-    { id: 'rueda_auxilio', nombre: 'RUEDA DE AUXILIO', img: './auxilio.jpg' }
+  // Configuración de los pasos requeridos
+  const pasos = [
+    { id: "verde", titulo: "Tarjeta Verde / Cédula", ejemplo: "verde.jpg", desc: "Tome foto de la Tarjeta Verde / Cédula del vehículo." },
+    { id: "frente", titulo: "Frente del Vehículo", ejemplo: "frente.jpg", desc: "Tome foto del frente completo del vehículo (que se vea la patente)." },
+    { id: "dorso", titulo: "Parte Trasera", ejemplo: "trasera.jpg", desc: "Tome foto de la parte trasera completa (que se vea la patente)." },
+    { id: "lateral_izq", titulo: "Lateral Izquierdo", ejemplo: "izquierdo.jpg", desc: "Tome foto del lateral izquierdo completo." },
+    { id: "lateral_der", titulo: "Lateral Derecho", ejemplo: "derecho.jpg", desc: "Tome foto del lateral derecho completo." }
   ];
 
-  // Fotografías condicionales de GNC
-  const fotosGNC = [
-    { id: 'tubo_gnc', nombre: 'TUBO DE GNC', img: './gnc.jpg' },
-    { id: 'oblea_gnc', nombre: 'OBLEA DE GNC', img: './oblea.jpg' }
-  ];
-
-  let listaFotos = [];
-  let indiceFotoActual = 0;
+  let pasoActualIdx = 0;
   let fotosCapturadas = {};
   let streamCamara = null;
-  let fotoTempData = null;
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const dominio = urlParams.get('dominio') || 'No especificado';
-  const cliente = urlParams.get('cliente') || 'No especificado';
+  const video = document.getElementById('webcam');
+  const fotoPreview = document.getElementById('foto-preview');
+  const btnCamara = document.getElementById('btn-camara');
+  const btnCapturar = document.getElementById('btn-capturar');
+  const btnRepetir = document.getElementById('btn-repetir');
+  const btnSiguiente = document.getElementById('btn-siguiente');
 
-  function comenzarInspeccion() {
-    document.getElementById('brand-header').classList.add('hidden');
-    document.getElementById('step-welcome').classList.add('hidden');
-    document.getElementById('step-gnc').classList.remove('hidden');
-  }
+  function cargarPaso() {
+    const paso = pasos[pasoActualIdx];
+    document.getElementById('titulo-paso').innerText = `Paso ${pasoActualIdx + 1}: ${paso.titulo}`;
+    document.getElementById('desc-paso').innerText = paso.desc;
+    document.getElementById('imagen-ejemplo').src = paso.ejemplo;
 
-  function responderGNC(tieneGNC) {
-    listaFotos = [...fotosBase];
-    if (tieneGNC) {
-      listaFotos = listaFotos.concat(fotosGNC);
-    }
-    document.getElementById('step-gnc').classList.add('hidden');
-    document.getElementById('step-camera').classList.remove('hidden');
-    iniciarCamara();
-    mostrarPasoFoto();
-  }
-
-  async function iniciarCamara() {
+    // Resetear visor
     detenerCamara();
-    document.getElementById('btn-reload-cam').classList.add('hidden');
-    
+    video.style.display = 'none';
+    fotoPreview.style.display = 'none';
+    btnCamara.style.display = 'block';
+    btnCapturar.style.display = 'none';
+    btnRepetir.style.display = 'none';
+    btnSiguiente.style.display = 'none';
+  }
+
+  async function activarCamara() {
     try {
-      streamCamara = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: { ideal: "environment" }, width: { ideal: 1280 }, height: { ideal: 720 } },
-        audio: false
+      streamCamara = await navigator.mediaDevices.getUserMedia({ 
+        video: { facingMode: "environment" }, 
+        audio: false 
       });
-      const videoElement = document.getElementById('video');
-      videoElement.srcObject = streamCamara;
-      await videoElement.play();
+      video.srcObject = streamCamara;
+      video.style.display = 'block';
+      fotoPreview.style.display = 'none';
+      btnCamara.style.display = 'none';
+      btnCapturar.style.display = 'block';
     } catch (err) {
-      try {
-        streamCamara = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-        const videoElement = document.getElementById('video');
-        videoElement.srcObject = streamCamara;
-        await videoElement.play();
-      } catch (err2) {
-        alert("No se pudo iniciar la cámara automáticamente. Presione 'Activar Cámara'.");
-        document.getElementById('btn-reload-cam').classList.remove('hidden');
-      }
+      alert("No se pudo acceder a la cámara. Verifique los permisos en su navegador.");
     }
   }
 
-  function mostrarPasoFoto() {
-    const fotoActual = listaFotos[indiceFotoActual];
-    document.getElementById('photo-title').innerText = fotoActual.nombre;
-    
-    const container = document.getElementById('example-svg-container');
-    container.innerHTML = '';
-
-    const imgObj = new Image();
-    imgObj.src = fotoActual.img;
-    imgObj.alt = fotoActual.nombre;
-
-    imgObj.onerror = function() {
-      if (this.src.endsWith('acompanante.jpg')) {
-        this.src = './acompanante.png';
-      } else {
-        container.style.display = 'none';
-      }
-    };
-    imgObj.onload = function() {
-      container.style.display = 'flex';
-    };
-
-    container.appendChild(imgObj);
-    
-    document.getElementById('video').classList.remove('hidden');
-    document.getElementById('preview-img').classList.add('hidden');
-    document.getElementById('btn-capture').classList.remove('hidden');
-    document.getElementById('retake-controls').classList.add('hidden');
-  }
-
-  function capturarFoto() {
-    const video = document.getElementById('video');
-    const canvas = document.getElementById('canvas');
+  function tomarFoto() {
+    const canvas = document.createElement('canvas');
     canvas.width = video.videoWidth || 640;
     canvas.height = video.videoHeight || 480;
-    
     const ctx = canvas.getContext('2d');
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
     
-    fotoTempData = canvas.toDataURL('image/jpeg', 0.8);
-    
-    const preview = document.getElementById('preview-img');
-    preview.src = fotoTempData;
-    
-    video.classList.add('hidden');
-    preview.classList.remove('hidden');
-    document.getElementById('btn-capture').classList.add('hidden');
-    document.getElementById('retake-controls').classList.remove('hidden');
+    const base64Img = canvas.toDataURL('image/jpeg', 0.8);
+    fotosCapturadas[pasos[pasoActualIdx].id] = base64Img;
+
+    detenerCamara();
+    video.style.display = 'none';
+    fotoPreview.src = base64Img;
+    fotoPreview.style.display = 'block';
+
+    btnCapturar.style.display = 'none';
+    btnRepetir.style.display = 'block';
+    btnSiguiente.style.display = 'block';
   }
 
   function repetirFoto() {
-    fotoTempData = null;
-    document.getElementById('video').classList.remove('hidden');
-    document.getElementById('preview-img').classList.add('hidden');
-    document.getElementById('btn-capture').classList.remove('hidden');
-    document.getElementById('retake-controls').classList.add('hidden');
-    if (!streamCamara || !streamCamara.active) {
-      iniciarCamara();
-    }
-  }
-
-  function confirmarFoto() {
-    const fotoActual = listaFotos[indiceFotoActual];
-    fotosCapturadas[fotoActual.id] = fotoTempData;
-
-    indiceFotoActual++;
-    if (indiceFotoActual < listaFotos.length) {
-      mostrarPasoFoto();
-    } else {
-      detenerCamara();
-      document.getElementById('step-camera').classList.add('hidden');
-      document.getElementById('step-send').classList.remove('hidden');
-    }
+    activarCamara();
   }
 
   function detenerCamara() {
@@ -495,33 +189,46 @@
     }
   }
 
-  function enviarInspeccion() {
-    document.getElementById('btn-submit').classList.add('hidden');
-    document.getElementById('loading').classList.remove('hidden');
+  function siguientePaso() {
+    pasoActualIdx++;
+    if (pasoActualIdx < pasos.length) {
+      cargarPaso();
+    } else {
+      enviarFotosAGoogleDrive();
+    }
+  }
 
-    const payload = {
-      dominio: dominio,
-      cliente: cliente,
-      fotos: fotosCapturadas
-    };
+  function enviarFotosAGoogleDrive() {
+    document.getElementById('paso-container').innerHTML = `
+      <h2>Procesando...</h2>
+      <p>Aguarde un momento mientras se envían las fotos a Google Drive.</p>
+    `;
+    document.getElementById('status-msg').innerText = "Subiendo fotos...";
 
     fetch(SCRIPT_URL, {
       method: 'POST',
       mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
+      body: JSON.stringify({ fotos: fotosCapturadas })
     })
     .then(() => {
-      document.getElementById('step-send').classList.add('hidden');
-      document.getElementById('brand-header').classList.remove('hidden');
-      document.getElementById('step-thanks').classList.remove('hidden');
+      document.getElementById('paso-container').innerHTML = `
+        <h2 style="color: #28a745;">¡Inspección Completada!</h2>
+        <p>Las fotos se han guardado correctamente.</p>
+      `;
+      document.getElementById('status-msg').innerText = "";
     })
     .catch(err => {
-      alert("Error al enviar. Intente de nuevo.");
-      document.getElementById('btn-submit').classList.remove('hidden');
-      document.getElementById('loading').classList.add('hidden');
+      document.getElementById('paso-container').innerHTML = `
+        <h2 style="color: #dc3545;">Error al Enviar</h2>
+        <p>Hubo un problema al subir las fotos. Intente nuevamente.</p>
+      `;
+      document.getElementById('status-msg').innerText = "";
     });
   }
+
+  // Cargar el primer paso (Tarjeta Verde) al iniciar
+  cargarPaso();
 </script>
 
 </body>
