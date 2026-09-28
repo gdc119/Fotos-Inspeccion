@@ -408,15 +408,21 @@
 
   document.addEventListener("DOMContentLoaded", () => {
     const input = document.getElementById('input-dominio');
-    
-    // Lista de textos genéricos que ignoramos para limpiar el campo
-    const textosInvalidos = ["foto_app_inspeccion", "dominio", "ej:", "a123bcd", "null", "undefined"];
-    
-    const dominioLimpio = dominio.toLowerCase().trim();
-    const esInvalido = textosInvalidos.some(texto => dominioLimpio.includes(texto));
+    const dom = dominio.toLowerCase().trim();
+
+    // Filtra cualquier palabra genérica o de prueba
+    const esTextoInvalido = 
+      dom.includes("foto") || 
+      dom.includes("auto") || 
+      dom.includes("inspeccion") || 
+      dom.includes("dominio") || 
+      dom.includes("ej:") || 
+      dom.includes("a123bcd") || 
+      dom === "null" || 
+      dom === "undefined";
 
     if (input) {
-      if (dominio && !esInvalido) {
+      if (dominio && !esTextoInvalido) {
         input.value = dominio.toUpperCase();
       } else {
         input.value = '';
